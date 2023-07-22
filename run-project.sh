@@ -1,4 +1,4 @@
-export CLASS=demo.etl.YellowTripDataStagingToAnalytics
+export CLASS=demo.etl.YellowTripDataAnalyticsToDatabase
 export JAR=deploy-spark-standalone-1.0.0-SNAPSHOT.jar
 SPARK_MASTER_ID="$(docker ps -aqf "name=spark-master-1")"
 export SPARK_MASTER_ID

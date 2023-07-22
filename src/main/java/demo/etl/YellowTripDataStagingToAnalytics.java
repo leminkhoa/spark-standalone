@@ -85,6 +85,7 @@ public class YellowTripDataStagingToAnalytics {
 			.mode(SaveMode.Overwrite)
 			.jdbc(dbConnectionUrl, "yellow_trip", prop);
 
-		System.out.println("Process complete");
+		spark.stop();
+	 	System.out.println("Process complete");
 	}
 }

@@ -143,6 +143,7 @@ public class YellowTripDataLandingToStaging {
 		 .mode("overwrite")
 		 .parquet("s3a://staging/stg_nyc_yellowtrip_data/");
 
+	 spark.stop();
 	 System.out.println("Staging data has been successfully written!");
 
 	}

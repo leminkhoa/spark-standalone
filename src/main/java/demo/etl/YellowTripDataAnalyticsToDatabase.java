@@ -56,6 +56,7 @@ public class YellowTripDataAnalyticsToDatabase {
 			.mode(SaveMode.Overwrite)
 			.jdbc(dbConnectionUrl, "yellow_trip", prop);
 
+		spark.stop();
 		System.out.println("Process complete");
 	}
 }

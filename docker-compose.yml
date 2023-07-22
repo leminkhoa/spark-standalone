@@ -17,8 +17,8 @@ services:
   spark-worker:
     image: cluster-apache-spark:3.1.2
     ports:
-      - "8081-8100:8080"
-      - "7000-7100:7000"
+      - "8081-8099:8080"
+      - "7078-7099:7000"
     depends_on:
       - spark-master
     environment:

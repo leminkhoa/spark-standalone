@@ -1,2 +1,3 @@
-D:\Projects\Data\deploy-spark-stanalone\src\main\java\demo\etl\YellowTripDataLandingToStaging.java
-D:\Projects\Data\deploy-spark-stanalone\src\main\java\demo\etl\YellowTripDataStagingToAnalytics.java
+D:\Projects\Data\deploy-spark-stanalone\spark-standalone\src\main\java\demo\etl\YellowTripDataAnalyticsToDatabase.java
+D:\Projects\Data\deploy-spark-stanalone\spark-standalone\src\main\java\demo\etl\YellowTripDataStagingToAnalytics.java
+D:\Projects\Data\deploy-spark-stanalone\spark-standalone\src\main\java\demo\etl\YellowTripDataLandingToStaging.java
