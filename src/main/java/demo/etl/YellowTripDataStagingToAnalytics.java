@@ -64,6 +64,12 @@ public class YellowTripDataStagingToAnalytics {
 				functions.count(functions.lit(1)).alias("number_of_records")
 			);
 
+
+	 // Write output to staging folder
+	 agg_df.write().partitionBy("month", "vendor_name")
+		 .mode("overwrite")
+		 .parquet("s3a://analytics/agg_nyc_yellowtrip_data/");
+
 		// Save to postgresql
 		String dbConnectionUrl = "jdbc:postgresql://psql-database:5432/spark_labs";
 
