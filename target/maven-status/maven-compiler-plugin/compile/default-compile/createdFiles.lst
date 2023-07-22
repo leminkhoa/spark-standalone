@@ -1,2 +1,3 @@
 demo\etl\YellowTripDataStagingToAnalytics.class
+demo\etl\YellowTripDataAnalyticsToDatabase.class
 demo\etl\YellowTripDataLandingToStaging.class

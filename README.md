@@ -1,2 +1,2 @@
 # spark-standalone
-This repository
+<To be updated>
