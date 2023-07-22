@@ -1,0 +1,93 @@
+version: "3.3"
+services:
+  spark-master:
+    image: cluster-apache-spark:3.1.2
+    depends_on:
+      - minio
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    volumes:
+      - ./target:/opt/spark-apps
+      - ./conf/master:/opt/spark/conf
+    environment:
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_WORKLOAD=master
+
+  spark-worker:
+    image: cluster-apache-spark:3.1.2
+    ports:
+      - "8081-8100:8080"
+      - "7000-7100:7000"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_DRIVER_MEMORY=1G
+      - SPARK_EXECUTOR_MEMORY=1G
+      - SPARK_WORKLOAD=worker
+    volumes:
+      - ./target:/opt/spark-apps
+      - ./conf/worker:/conf
+
+  history:
+    image: cluster-apache-spark:3.1.2
+    ports:
+      - "18080:18080"
+    volumes:
+      - ./conf/history:/opt/spark/conf
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./s3:/data
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_DOMAIN=minio
+    command: ["server", "/data", "--console-address", ":9001"]
+
+
+  mc:
+    image: minio/mc
+    depends_on:
+      - minio
+    container_name: mc
+    environment:
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=password
+      - AWS_REGION=us-east-1
+    volumes:
+      - ./data:/tmp
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc mb minio/logging/spark-events;
+      /usr/bin/mc anonymous set public minio/logging;
+      
+      /usr/bin/mc mb minio/landing;
+      /usr/bin/mc anonymous set public minio/landing;
+      
+      /usr/bin/mc mb minio/staging;
+      /usr/bin/mc anonymous set public minio/staging;
+
+      /usr/bin/mc mb minio/analytics;
+      /usr/bin/mc anonymous set public minio/analytics;
+      
+      
+      tail -f /dev/null
+      "
+
+  psql-database:
+    image: postgres:11.7-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=spark_labs
